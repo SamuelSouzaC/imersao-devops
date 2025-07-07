@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  api:
+    # Constrói a imagem a partir do Dockerfile no diretório atual ('.').
+    # O Dockerfile define o ambiente base da nossa aplicação.
+    build: .
+
+    # A diretiva 'command' sobrescreve o CMD padrão do Dockerfile.
+    # Usamos '--reload' aqui para o desenvolvimento, para que o servidor
+    # reinicie automaticamente ao detectar alterações no código.
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+
+    # Monta o diretório atual ('.') no diretório '/app' do contêiner.
+    # Isso é essencial para que a flag '--reload' funcione, pois as
+    # alterações nos arquivos locais são espelhadas dentro do contêiner.
+    # Também garante que o banco de dados 'escola.db' seja salvo
+    # na sua máquina local, persistindo os dados.
+    volumes:
+      - .:/app
+
+    # Mapeia a porta 8000 do contêiner para a porta 8000 da sua máquina.
+    ports:
+      - "8000:8000"
